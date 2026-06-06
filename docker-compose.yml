@@ -1,0 +1,31 @@
+services:
+  jekyll:
+    build: ./jekyll
+    volumes:
+      - site-output:/srv/jekyll/_site
+      - ./src:/srv/jekyll/src:ro
+
+  webhook:
+    build: ./webhook
+    ports:
+      - "9000:9000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./rebuild.sh:/opt/rebuild.sh:ro
+    environment:
+      - WEBHOOK_SECRET=${WEBHOOK_SECRET}
+    depends_on:
+      - jekyll
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "8090:80"
+    volumes:
+      - site-output:/usr/share/nginx/html:ro
+    depends_on:
+      - jekyll
+
+volumes:
+  site-output:
+

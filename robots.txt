@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://willowidk.dev/sitemap.xml
